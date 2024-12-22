@@ -47,7 +47,7 @@ fun AppNavigator() {
     var multiplicationRange2 by remember { mutableStateOf(2..100) }
     var timeLimit by remember { mutableStateOf(120) }
     var filters by remember { mutableStateOf(setOf("Addition", "Subtraction", "Multiplication", "Division")) }
-
+    var score by remember { mutableStateOf(0) }
     when (screen) {
         "menu" -> MenuScreen(
             additionRange1 = additionRange1,
@@ -67,17 +67,20 @@ fun AppNavigator() {
             }
         )
 
-        "game" -> GameScreen(
-            additionRange1 = additionRange1,
-            additionRange2 = additionRange2,
-            multiplicationRange1 = multiplicationRange1,
-            multiplicationRange2 = multiplicationRange2,
-            timeLimit = timeLimit,
-            filters = filters,
-            onGameEnd = { screen = "end" }
-        )
+        "game" -> {
+            score = GameScreen(
+                additionRange1 = additionRange1,
+                additionRange2 = additionRange2,
+                multiplicationRange1 = multiplicationRange1,
+                multiplicationRange2 = multiplicationRange2,
+                timeLimit = timeLimit,
+                filters = filters,
+                onGameEnd = { screen = "end" }
+            )
+        }
 
         "end" -> EndScreen(
+            score = score,
             onTryAgain = { screen = "game" },
             onChangeSettings = { screen = "menu" }
         )
@@ -270,7 +273,7 @@ fun GameScreen(
     timeLimit: Int,
     filters: Set<String>,
     onGameEnd: () -> Unit
-) {
+): Int {
     var problem by remember {
         mutableStateOf(
             generateProblem(
@@ -350,11 +353,12 @@ fun GameScreen(
             Text("Score: $score", style = MaterialTheme.typography.bodyLarge)
         }
     }
+    return score
 }
 
 
 @Composable
-fun EndScreen(onTryAgain: () -> Unit, onChangeSettings: () -> Unit) {
+fun EndScreen(score: Int, onTryAgain: () -> Unit, onChangeSettings: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -363,6 +367,7 @@ fun EndScreen(onTryAgain: () -> Unit, onChangeSettings: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text("Time's Up!", style = MaterialTheme.typography.headlineLarge)
+        Text("Final Score: $score")
         Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = onTryAgain) { Text("Try Again") }
         Spacer(modifier = Modifier.height(8.dp))
