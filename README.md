@@ -2,5 +2,5 @@ android clone of https://arithmetic.zetamac.com/
 
 i suck at app development :D
 
-![img.png](img.png)
-![img_1.png](img_1.png)
+<img src="img.png" alt="drawing" width="300"/>
+<img src="img_1.png" alt="drawing" width="300"/>
